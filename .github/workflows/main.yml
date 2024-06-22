@@ -1,0 +1,35 @@
+name: Build/release
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'master'
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+      - name: Install Setuptools for Python
+        if: matrix.os == 'macos-latest'
+        run: pip3 install setuptools --break-system-packages
+
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: XCode Build
+        run: xcodebuild
+
+      - name: Package
+        run: make
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with: 
+          name: assets-for-download
+          path: build
