@@ -20,16 +20,19 @@ jobs:
         run: pip3 install setuptools --break-system-packages
 
       - name: Check out Git repository
-        run: git clone --recursive https://github.com/0x5b-5245444143544544-5d/HoRNDIS.git
+        uses: actions/checkout@v3
+
+      - name: Fetch dependencies
+        run: git clone https://github.com/acidanthera/MacKernelSDK
 
       - name: XCode Build
-        run: cd HoRNDIS && xcodebuild
+        run: xcodebuild
 
       - name: Package
-        run: cd HoRNDIS && make
+        run: make
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with: 
           name: assets-for-download
-          path: HoRNDIS
+          path: build
